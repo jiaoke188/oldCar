@@ -50,19 +50,6 @@ public class HomeActivity extends AppCompatActivity {
         Button favoriteButton = findViewById(R.id.buttonFavorite);
         Button logButton = findViewById(R.id.buttonLog);
 
-        if ("CUSTOMER".equals(sessionManager.getRole())) {
-            carManageButton.setVisibility(View.GONE);
-        } else {
-            carManageButton.setVisibility(View.VISIBLE);
-        }
-
-        if (UserRole.CUSTOMER.equals(sessionManager.getRole())) {
-            logButton.setVisibility(View.GONE);
-        }
-
-        if (UserRole.MERCHANT.equals(sessionManager.getRole())) {
-            logButton.setVisibility(View.GONE);
-        }
         // 模块导航事件
         userManageButton.setOnClickListener(v -> startActivity(new Intent(this, UserManagementActivity.class)));
         carManageButton.setOnClickListener(v -> startActivity(new Intent(this, CarManagementActivity.class)));

@@ -52,14 +52,14 @@
                 android:id="@+id/buttonRentalManage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="租赁信息查询"
+                android:text="租赁管理模块"
                 android:layout_marginBottom="12dp" />
 
             <Button
                 android:id="@+id/buttonMarket"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="商品信息与商品选购"
+                android:text="商品发布与浏览"
                 android:layout_marginBottom="12dp" />
 
             <Button

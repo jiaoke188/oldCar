@@ -51,6 +51,7 @@ public class RentalManagementActivity extends AppCompatActivity implements Order
 
         searchInput = findViewById(R.id.inputSearch);
         Button searchButton = findViewById(R.id.buttonSearch);
+        Button addButton = findViewById(R.id.buttonAddOrder);
         Button exportButton = findViewById(R.id.buttonExport);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         emptyView = findViewById(R.id.emptyView);
@@ -61,6 +62,7 @@ public class RentalManagementActivity extends AppCompatActivity implements Order
         recyclerView.setAdapter(adapter);
 
         searchButton.setOnClickListener(v -> loadOrders(searchInput.getText().toString().trim()));
+        addButton.setOnClickListener(v -> startActivity(new Intent(this, OrderEditActivity.class)));
         exportButton.setOnClickListener(v -> exportOrders());
     }
 

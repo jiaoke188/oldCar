@@ -4,28 +4,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.RentalManagementActivity">
+    tools:context=".ui.CarMarketActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
-        android:title="租赁管理"
+        android:title="商品浏览"
         android:titleTextColor="@android:color/white" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="16dp">
 
         <EditText
             android:id="@+id/inputSearch"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="订单/车辆/客户"
+            android:hint="搜索车辆"
             android:background="@drawable/bg_input"
             android:padding="12dp" />
 
@@ -33,26 +33,8 @@
             android:id="@+id/buttonSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="查询"
-            android:layout_marginStart="8dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="8dp">
-
-
-        <Button
-            android:id="@+id/buttonExport"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="12dp"
-            android:text="导出订单" />
+            android:layout_marginStart="8dp"
+            android:text="查询" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -66,7 +48,7 @@
         android:id="@+id/emptyView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="暂无订单"
+        android:text="暂无车辆"
         android:textAlignment="center"
         android:visibility="gone"
         android:padding="16dp" />

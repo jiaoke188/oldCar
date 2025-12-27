@@ -4,28 +4,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.RentalManagementActivity">
+    tools:context=".ui.LogActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
-        android:title="租赁管理"
+        android:title="系统日志"
         android:titleTextColor="@android:color/white" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="16dp">
 
         <EditText
             android:id="@+id/inputSearch"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="订单/车辆/客户"
+            android:hint="模块/关键字"
             android:background="@drawable/bg_input"
             android:padding="12dp" />
 
@@ -37,23 +37,13 @@
             android:layout_marginStart="8dp" />
     </LinearLayout>
 
-    <LinearLayout
+    <Button
+        android:id="@+id/buttonClear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="8dp">
-
-
-        <Button
-            android:id="@+id/buttonExport"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="12dp"
-            android:text="导出订单" />
-    </LinearLayout>
+        android:text="清空日志"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -66,7 +56,7 @@
         android:id="@+id/emptyView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="暂无订单"
+        android:text="暂无日志"
         android:textAlignment="center"
         android:visibility="gone"
         android:padding="16dp" />

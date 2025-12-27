@@ -12,16 +12,6 @@
         android:orientation="vertical"
         android:gravity="center_horizontal">
 
-        <ImageView
-            android:id="@+id/iv_login_logo"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:src="@drawable/llogin_logo"
-            android:contentDescription="登录页图片"
-            android:scaleType="fitCenter"
-            android:layout_marginBottom="40dp"
-            android:layout_marginTop="60dp"/>
-
         <TextView
             android:id="@+id/textTitle"
             android:layout_width="wrap_content"
@@ -35,7 +25,7 @@
             android:id="@+id/textSubtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text=""
+            android:text="课程项目组员：\n2220231946 王海宁\n2220231116 焦帅伟\n2220232668 张伟旗\n2220234058 曹志禹\n2220233044 杨丰隆"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
             android:paddingBottom="24dp" />
