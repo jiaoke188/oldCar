@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:padding="12dp" android:background="@drawable/bg_input" android:layout_marginBottom="8dp">
+
+    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+
+        <TextView android:id="@+id/carName" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="16sp" android:textStyle="bold" android:textColor="@android:color/black" android:text="车辆名称" />
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="4dp">
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="品牌：" android:textColor="@android:color/darker_gray" android:textSize="12sp" />
+
+            <TextView android:id="@+id/carBrand" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="品牌" android:textColor="@android:color/darker_gray" android:textSize="12sp" android:layout_marginEnd="12dp" />
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="类型：" android:textColor="@android:color/darker_gray" android:textSize="12sp" />
+
+            <TextView android:id="@+id/carCategory" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="类型" android:textColor="@android:color/darker_gray" android:textSize="12sp" android:layout_marginEnd="12dp" />
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="库存：" android:textColor="@android:color/darker_gray" android:textSize="12sp" />
+
+            <TextView android:id="@+id/carInventory" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textColor="@android:color/darker_gray" android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="4dp">
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="日租价：" android:textColor="@android:color/darker_gray" android:textSize="12sp" />
+
+            <TextView android:id="@+id/carPrice" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="¥0.00" android:textColor="#FF6B6B" android:textStyle="bold" android:textSize="12sp" android:layout_marginEnd="12dp" />
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="描述：" android:textColor="@android:color/darker_gray" android:textSize="12sp" />
+
+            <TextView android:id="@+id/carDescription" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="暂无描述" android:textColor="@android:color/darker_gray" android:textSize="12sp" android:maxLines="1" android:ellipsize="end" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button android:id="@+id/carDetailButton" android:layout_width="wrap_content" android:layout_height="40dp" android:text="详情" android:layout_gravity="center_vertical" android:layout_marginStart="8dp" android:textSize="12sp" android:paddingStart="12dp" android:paddingEnd="12dp" />
+</LinearLayout>

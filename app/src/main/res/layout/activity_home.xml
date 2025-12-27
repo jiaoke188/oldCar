@@ -1,79 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ui.HomeActivity">
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" tools:context=".ui.HomeActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:title="租车管理系统"
-        android:titleTextColor="@android:color/white" />
+    <androidx.appcompat.widget.Toolbar android:id="@+id/toolbar" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="?attr/colorPrimary" android:title="租车管理系统" android:titleTextColor="@android:color/white" />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp"
-            android:gravity="center_horizontal">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp" android:gravity="center_horizontal">
 
-            <TextView
-                android:id="@+id/textWelcome"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                android:textColor="@android:color/black"
-                android:paddingBottom="16dp"
-                tools:text="欢迎" />
+            <TextView android:id="@+id/textWelcome" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="@style/TextAppearance.Material3.TitleMedium" android:textColor="@android:color/black" android:paddingBottom="16dp" tools:text="欢迎" />
 
-            <Button
-                android:id="@+id/buttonUserManage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="系统用户管理"
-                android:layout_marginBottom="12dp" />
+            <Button android:id="@+id/buttonUserManage" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="系统用户管理" android:layout_marginBottom="12dp" />
 
-            <Button
-                android:id="@+id/buttonCarManage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="车辆信息管理"
-                android:layout_marginBottom="12dp" />
+            <Button android:id="@+id/buttonCarManage" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="车辆信息管理" android:layout_marginBottom="12dp" />
 
-            <Button
-                android:id="@+id/buttonRentalManage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="租赁信息查询"
-                android:layout_marginBottom="12dp" />
+            <Button android:id="@+id/buttonRentalManage" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="租赁信息查询" android:layout_marginBottom="12dp" />
 
-            <Button
-                android:id="@+id/buttonMarket"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="商品信息与商品选购"
-                android:layout_marginBottom="12dp" />
+            <Button android:id="@+id/buttonMarket" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="商品信息与商品选购" android:layout_marginBottom="12dp" />
 
-            <Button
-                android:id="@+id/buttonFavorite"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="收藏夹" />
+            <Button android:id="@+id/buttonFavorite" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="收藏夹" />
 
-            <Button
-                android:id="@+id/buttonLog"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="日志管理"
-                android:layout_marginTop="12dp" />
+            <Button android:id="@+id/buttonLog" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="日志管理" android:layout_marginTop="12dp" />
         </LinearLayout>
     </ScrollView>
+
+    <!-- 可租赁汽车信息部分 -->
+    <LinearLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:orientation="vertical" android:background="@android:color/white" android:padding="8dp">
+
+        <!-- 还车日期提醒部分 -->
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingBottom="8dp">
+
+            <TextView android:id="@+id/textReturnDateReminder" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="14sp" android:textStyle="bold" android:textColor="#FF6B6B" android:text="还车日期: 未设置" android:paddingStart="8dp" android:paddingEnd="8dp" android:paddingTop="4dp" android:paddingBottom="4dp" />
+
+            <TextView android:id="@+id/textNoReturnTip" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="12sp" android:textColor="@android:color/darker_gray" android:text="提示: 如无需还车，请不用设置还车日期" android:paddingStart="8dp" android:paddingEnd="8dp" android:visibility="gone" />
+        </LinearLayout>
+
+        <!-- 标题 -->
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="可租赁汽车" android:textSize="16sp" android:textStyle="bold" android:textColor="@android:color/black" android:paddingStart="8dp" android:paddingBottom="8dp" />
+
+        <!-- 汽车列表 -->
+        <androidx.recyclerview.widget.RecyclerView android:id="@+id/carRecyclerView" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:orientation="vertical" />
+
+        <!-- 搜索框部分 - 最下面 -->
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingTop="8dp" android:paddingStart="8dp" android:paddingEnd="8dp" android:paddingBottom="8dp" android:background="@android:color/white">
+
+            <EditText android:id="@+id/searchCarInput" android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1" android:layout_marginEnd="8dp" android:paddingStart="12dp" android:paddingEnd="12dp" android:hint="输入汽车名称/品牌/类型" android:background="@drawable/bg_input" android:textColorHint="@android:color/darker_gray" android:textColor="@android:color/black" android:textSize="12sp" />
+
+            <Button android:id="@+id/searchCarButton" android:layout_width="wrap_content" android:layout_height="40dp" android:text="搜索" android:textSize="12sp" android:paddingStart="12dp" android:paddingEnd="12dp" />
+
+            <Button android:id="@+id/goPaymentButton" android:layout_width="wrap_content" android:layout_height="40dp" android:text="支付" android:textSize="12sp" android:paddingStart="12dp" android:paddingEnd="12dp" android:layout_marginStart="8dp" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

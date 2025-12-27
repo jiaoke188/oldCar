@@ -28,7 +28,7 @@ import java.util.List;
 
 public class RentalManagementActivity extends AppCompatActivity implements OrderAdapter.OnItemActionListener {
 
-    private static final String[] STATUS_OPTIONS = new String[]{"已预定", "进行中", "已完成", "已取消"};
+    private static final String[] STATUS_OPTIONS = new String[] { "已预定", "进行中", "已完成", "已取消" };
 
     private DataRepository repository;
     private SessionManager sessionManager;
@@ -103,21 +103,8 @@ public class RentalManagementActivity extends AppCompatActivity implements Order
 
     @Override
     public void onStatusChange(OrderWithDetail order) {
-        new AlertDialog.Builder(this)
-                .setTitle("更新订单状态")
-                .setItems(STATUS_OPTIONS, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        repository.updateOrderStatus(order.getId(), STATUS_OPTIONS[which], sessionManager.getUsername(), new RepositoryCallback<Boolean>() {
-                            @Override
-                            public void onComplete(Boolean result) {
-                                Toast.makeText(RentalManagementActivity.this, "状态已更新", Toast.LENGTH_SHORT).show();
-                                loadOrders(searchInput.getText().toString().trim());
-                            }
-                        });
-                    }
-                })
-                .show();
+        // 订单状态不能手动修改，根据支付状态自动更新
+        Toast.makeText(this, "订单状态由系统自动管理，不能手动修改", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -141,6 +128,18 @@ public class RentalManagementActivity extends AppCompatActivity implements Order
                 })
                 .setNegativeButton("取消", null)
                 .show();
+    }
+
+    @Override
+    public void onPayment(OrderWithDetail order) {
+        // 跳转到支付界面
+        Intent intent = new Intent(this, PaymentActivity.class);
+        intent.putExtra("orderId", order.getId());
+        intent.putExtra("orderCode", order.getOrderCode());
+        intent.putExtra("totalAmount", order.getTotalAmount());
+        intent.putExtra("returnDate", com.example.carrentalapp.util.FormatUtils.formatDate(order.getEndDate()));
+        intent.putExtra("isFromRentalManagement", true);
+        startActivity(intent);
     }
 
     @Override

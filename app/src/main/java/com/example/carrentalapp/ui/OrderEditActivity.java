@@ -1,6 +1,7 @@
 package com.example.carrentalapp.ui;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,7 +36,7 @@ public class OrderEditActivity extends AppCompatActivity {
     public static final String EXTRA_ORDER_ID = "extra_order_id";
     public static final String EXTRA_CAR_ID = "extra_car_id";
 
-    private static final String[] STATUS_OPTIONS = new String[]{"已预定", "进行中", "已完成", "已取消"};
+    private static final String[] STATUS_OPTIONS = new String[] { "已预定", "进行中", "已完成", "已取消" };
 
     private DataRepository repository;
     private SessionManager sessionManager;
@@ -58,6 +59,8 @@ public class OrderEditActivity extends AppCompatActivity {
     private long preselectCarId;
     private long startTimestamp;
     private long endTimestamp;
+
+    private Button paymentButton; // 支付按钮
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,15 +85,25 @@ public class OrderEditActivity extends AppCompatActivity {
         summaryView = findViewById(R.id.textSummary);
         progressBar = findViewById(R.id.progressBar);
         saveButton = findViewById(R.id.buttonSave);
+        paymentButton = findViewById(R.id.buttonPayment);
 
-        ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, STATUS_OPTIONS);
+        ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
+                STATUS_OPTIONS);
         statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         statusSpinner.setAdapter(statusAdapter);
+
+        // 禁用状态手动修改
+        statusSpinner.setEnabled(false);
 
         startDateInput.setOnClickListener(v -> showDatePicker(true));
         endDateInput.setOnClickListener(v -> showDatePicker(false));
 
         saveButton.setOnClickListener(v -> saveOrder());
+
+        // 支付按钮点击事件
+        if (paymentButton != null) {
+            paymentButton.setOnClickListener(v -> processPayment());
+        }
 
         carSpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
             @Override
@@ -128,7 +141,8 @@ public class OrderEditActivity extends AppCompatActivity {
                 for (CarEntity car : carList) {
                     names.add(car.getName());
                 }
-                ArrayAdapter<String> carAdapter = new ArrayAdapter<>(OrderEditActivity.this, android.R.layout.simple_spinner_item, names);
+                ArrayAdapter<String> carAdapter = new ArrayAdapter<>(OrderEditActivity.this,
+                        android.R.layout.simple_spinner_item, names);
                 carAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 carSpinner.setAdapter(carAdapter);
                 if (preselectCarId > 0) {
@@ -172,7 +186,8 @@ public class OrderEditActivity extends AppCompatActivity {
                     }
                     names.add(display);
                 }
-                ArrayAdapter<String> userAdapter = new ArrayAdapter<>(OrderEditActivity.this, android.R.layout.simple_spinner_item, names);
+                ArrayAdapter<String> userAdapter = new ArrayAdapter<>(OrderEditActivity.this,
+                        android.R.layout.simple_spinner_item, names);
                 userAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 customerSpinner.setAdapter(userAdapter);
                 if (currentOrder != null) {
@@ -201,10 +216,16 @@ public class OrderEditActivity extends AppCompatActivity {
                 startDateInput.setText(FormatUtils.formatDate(startTimestamp));
                 endDateInput.setText(FormatUtils.formatDate(endTimestamp));
                 notesInput.setText(result.getNotes());
-                statusSpinner.setSelection(getStatusIndex(result.getStatus()));
+                // 自动设置状态而不是从用户选择
+                updateOrderStatus(result);
                 refreshSummary();
                 selectCar(result.getCarId());
                 selectCustomer(result.getUserId());
+
+                // 根据订单状态显示或隐藏支付按钮
+                if (paymentButton != null) {
+                    paymentButton.setVisibility("已预定".equals(result.getStatus()) ? View.VISIBLE : View.GONE);
+                }
             }
         });
     }
@@ -251,7 +272,8 @@ public class OrderEditActivity extends AppCompatActivity {
     }
 
     private void refreshSummary() {
-        if (startTimestamp > 0 && endTimestamp >= startTimestamp && carSpinner.getSelectedItemPosition() >= 0 && carSpinner.getSelectedItemPosition() < carList.size()) {
+        if (startTimestamp > 0 && endTimestamp >= startTimestamp && carSpinner.getSelectedItemPosition() >= 0
+                && carSpinner.getSelectedItemPosition() < carList.size()) {
             long diff = endTimestamp - startTimestamp;
             int days = (int) (diff / (24 * 60 * 60 * 1000L)) + 1;
             if (days <= 0) {
@@ -304,7 +326,15 @@ public class OrderEditActivity extends AppCompatActivity {
         entity.setTotalDays(days);
         entity.setTotalAmount(amount);
         entity.setNotes(notesInput.getText().toString().trim());
-        entity.setStatus(STATUS_OPTIONS[statusSpinner.getSelectedItemPosition()]);
+
+        // 自动设置订单状态
+        if (currentOrder == null) {
+            // 新建订单，初始状态为"已预定"
+            entity.setStatus("已预定");
+        } else {
+            // 更新现有订单，保持原状态
+            entity.setStatus(currentOrder.getStatus());
+        }
 
         repository.saveOrder(entity, sessionManager.getUsername(), new RepositoryCallback<Long>() {
             @Override
@@ -341,5 +371,46 @@ public class OrderEditActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void updateOrderStatus(RentalOrderEntity order) {
+        // 根据订单的日期自动更新状态
+        long now = System.currentTimeMillis();
+        String newStatus;
+
+        if (now < order.getStartDate()) {
+            // 还未开始，状态为"已预定"
+            newStatus = "已预定";
+        } else if (now >= order.getStartDate() && now <= order.getEndDate()) {
+            // 在租赁期间，状态为"进行中"
+            newStatus = "进行中";
+        } else {
+            // 已过结束日期，状态为"已完成"
+            newStatus = "已完成";
+        }
+
+        // 更新 UI 显示状态
+        statusSpinner.setSelection(getStatusIndex(newStatus));
+        order.setStatus(newStatus);
+    }
+
+    private void processPayment() {
+        if (currentOrder == null || orderId <= 0) {
+            Toast.makeText(this, "订单不存在", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!"已预定".equals(currentOrder.getStatus())) {
+            Toast.makeText(this, "只有待支付的订单才能进行支付", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // 跳转到支付页面
+        Intent intent = new Intent(this, PaymentActivity.class);
+        intent.putExtra("orderId", orderId);
+        intent.putExtra("orderCode", currentOrder.getOrderCode());
+        intent.putExtra("totalAmount", currentOrder.getTotalAmount());
+        intent.putExtra("returnDate", FormatUtils.formatDate(currentOrder.getEndDate()));
+        startActivity(intent);
     }
 }

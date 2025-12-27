@@ -24,6 +24,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         void onStatusChange(OrderWithDetail order);
 
         void onDelete(OrderWithDetail order);
+
+        void onPayment(OrderWithDetail order);
     }
 
     private final List<OrderWithDetail> data = new ArrayList<>();
@@ -63,7 +65,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         private final TextView codeView;
         private final TextView infoView;
         private final TextView dateView;
-        private final Button statusButton;
+        private final TextView remainingDaysView;
+        private final TextView statusView;
+        private final Button paymentButton;
         private final Button deleteButton;
 
         OrderViewHolder(@NonNull View itemView) {
@@ -71,22 +75,50 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             codeView = itemView.findViewById(R.id.textOrderCode);
             infoView = itemView.findViewById(R.id.textOrderInfo);
             dateView = itemView.findViewById(R.id.textOrderDate);
-            statusButton = itemView.findViewById(R.id.buttonStatus);
+            remainingDaysView = itemView.findViewById(R.id.textRemainingDays);
+            statusView = itemView.findViewById(R.id.textStatus);
+            paymentButton = itemView.findViewById(R.id.buttonPayment);
             deleteButton = itemView.findViewById(R.id.buttonDelete);
         }
 
         void bind(OrderWithDetail order) {
             codeView.setText(order.getOrderCode());
-            String info = itemView.getContext().getString(R.string.order_meta_template, order.getCarName(), order.getUserName(), order.getTotalAmount());
+            String info = itemView.getContext().getString(R.string.order_meta_template, order.getCarName(),
+                    order.getUserName(), order.getTotalAmount());
             infoView.setText(info);
-            String dateText = itemView.getContext().getString(R.string.order_date_template, FormatUtils.formatDate(order.getStartDate()), FormatUtils.formatDate(order.getEndDate()));
+            String dateText = itemView.getContext().getString(R.string.order_date_template,
+                    FormatUtils.formatDate(order.getStartDate()), FormatUtils.formatDate(order.getEndDate()));
             dateView.setText(dateText);
-            statusButton.setText(order.getStatus());
-            statusButton.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onStatusChange(order);
+
+            // 显示订单状态（仅显示，不可修改）
+            statusView.setText(order.getStatus());
+
+            // 显示支付按钮（仅当状态为"已预定"时）
+            if ("已预定".equals(order.getStatus())) {
+                paymentButton.setVisibility(View.VISIBLE);
+                paymentButton.setOnClickListener(v -> {
+                    if (listener != null) {
+                        listener.onPayment(order);
+                    }
+                });
+            } else {
+                paymentButton.setVisibility(View.GONE);
+            }
+
+            // 显示还车倒计时（仅当状态为"进行中"时）
+            if ("进行中".equals(order.getStatus())) {
+                long now = System.currentTimeMillis();
+                long endTime = order.getEndDate();
+                long daysRemaining = (endTime - now) / (24 * 60 * 60 * 1000L);
+                if (daysRemaining < 0) {
+                    daysRemaining = 0;
                 }
-            });
+                remainingDaysView.setVisibility(View.VISIBLE);
+                remainingDaysView.setText(String.format("还车倒计时: 还有%d天", daysRemaining));
+            } else {
+                remainingDaysView.setVisibility(View.GONE);
+            }
+
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onEdit(order);

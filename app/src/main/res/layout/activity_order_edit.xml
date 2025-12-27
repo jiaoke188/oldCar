@@ -1,99 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ui.OrderEditActivity">
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" tools:context=".ui.OrderEditActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:title="编辑订单"
-        android:titleTextColor="@android:color/white" />
+    <androidx.appcompat.widget.Toolbar android:id="@+id/toolbar" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="?attr/colorPrimary" android:title="编辑订单" android:titleTextColor="@android:color/white" />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="24dp">
 
-            <Spinner
-                android:id="@+id/spinnerCar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp" />
+            <Spinner android:id="@+id/spinnerCar" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" />
 
-            <Spinner
-                android:id="@+id/spinnerCustomer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp" />
+            <Spinner android:id="@+id/spinnerCustomer" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" />
 
-            <Spinner
-                android:id="@+id/spinnerStatus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp" />
+            <Spinner android:id="@+id/spinnerStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" />
 
-            <EditText
-                android:id="@+id/inputStartDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="开始日期"
-                android:focusable="false"
-                android:background="@drawable/bg_input"
-                android:padding="12dp" />
+            <EditText android:id="@+id/inputStartDate" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="开始日期" android:focusable="false" android:background="@drawable/bg_input" android:padding="12dp" />
 
-            <EditText
-                android:id="@+id/inputEndDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:hint="结束日期"
-                android:focusable="false"
-                android:background="@drawable/bg_input"
-                android:padding="12dp" />
+            <EditText android:id="@+id/inputEndDate" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:hint="结束日期" android:focusable="false" android:background="@drawable/bg_input" android:padding="12dp" />
 
-            <TextView
-                android:id="@+id/textSummary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                tools:text="共3天，预计金额999.0元" />
+            <TextView android:id="@+id/textSummary" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" tools:text="共3天，预计金额999.0元" />
 
-            <EditText
-                android:id="@+id/inputNotes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:hint="备注"
-                android:minLines="3"
-                android:gravity="start|top"
-                android:background="@drawable/bg_input"
-                android:padding="12dp" />
+            <EditText android:id="@+id/inputNotes" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:hint="备注" android:minLines="3" android:gravity="start|top" android:background="@drawable/bg_input" android:padding="12dp" />
 
-            <Button
-                android:id="@+id/buttonSave"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="保存" />
+            <Button android:id="@+id/buttonSave" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:text="保存" />
 
-            <ProgressBar
-                android:id="@+id/progressBar"
-                style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
-                android:visibility="gone" />
+            <Button android:id="@+id/buttonPayment" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="支付" android:visibility="gone" android:background="#FF6B6B" android:textColor="@android:color/white" />
+
+            <ProgressBar android:id="@+id/progressBar" style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Small" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:layout_marginTop="16dp" android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
