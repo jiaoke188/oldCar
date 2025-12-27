@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.carrentalapp.R;
@@ -30,6 +31,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
     private final List<OrderWithDetail> data = new ArrayList<>();
     private OnItemActionListener listener;
+    private long highlightedOrderId = -1L;
 
     public void setListener(OnItemActionListener listener) {
         this.listener = listener;
@@ -41,6 +43,22 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             data.addAll(list);
         }
         notifyDataSetChanged();
+    }
+
+    public void setHighlightedOrderId(long orderId) {
+        if (highlightedOrderId != orderId) {
+            highlightedOrderId = orderId;
+            notifyDataSetChanged();
+        }
+    }
+
+    public int getPositionById(long orderId) {
+        for (int i = 0; i < data.size(); i++) {
+            if (data.get(i).getId() == orderId) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @NonNull
@@ -82,6 +100,13 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         }
 
         void bind(OrderWithDetail order) {
+            if (itemView instanceof CardView) {
+                boolean highlighted = order.getId() == highlightedOrderId;
+                CardView cardView = (CardView) itemView;
+                cardView.setCardBackgroundColor(android.graphics.Color.WHITE);
+                cardView.setCardElevation(highlighted ? 8f : 2f);
+            }
+
             codeView.setText(order.getOrderCode());
             String info = itemView.getContext().getString(R.string.order_meta_template, order.getCarName(),
                     order.getUserName(), order.getTotalAmount());

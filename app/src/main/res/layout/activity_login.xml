@@ -26,7 +26,7 @@
             android:id="@+id/textTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="手机租车APP"
+            android:text="手机租车App"
             android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
             android:textStyle="bold"
             android:paddingBottom="16dp" />

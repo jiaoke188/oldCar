@@ -168,6 +168,25 @@ public class DataRepository {
         });
     }
 
+    public void decreaseCarInventory(long carId, String operator, RepositoryCallback<Boolean> callback) {
+        AppDatabase.getDatabaseExecutor().execute(() -> {
+            CarDao carDao = database.carDao();
+            CarEntity car = carDao.findById(carId);
+            if (car == null) {
+                dispatch(callback, Boolean.FALSE);
+                return;
+            }
+            if (car.getInventory() <= 0) {
+                dispatch(callback, Boolean.FALSE);
+                return;
+            }
+            car.setInventory(car.getInventory() - 1);
+            carDao.update(car);
+            logAsync("车辆管理", String.format(Locale.CHINA, "%s 支付成功，车辆 %s 库存减少 1", operator, car.getName()), operator);
+            dispatch(callback, Boolean.TRUE);
+        });
+    }
+
     public void loadCarById(long carId, RepositoryCallback<CarEntity> callback) {
         AppDatabase.getDatabaseExecutor().execute(() -> dispatch(callback, database.carDao().findById(carId)));
     }

@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.carrentalapp.R;
@@ -25,15 +27,46 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
 
     private final List<CarEntity> data = new ArrayList<>();
     private OnItemClickListener listener;
+    private boolean selectionHighlightEnabled;
+    private long selectedCarId = -1L;
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
+    }
+
+    public void setSelectionHighlightEnabled(boolean enabled) {
+        this.selectionHighlightEnabled = enabled;
+        notifyDataSetChanged();
+    }
+
+    public void setSelectedCarId(long carId) {
+        if (selectedCarId != carId) {
+            selectedCarId = carId;
+            if (selectionHighlightEnabled) {
+                notifyDataSetChanged();
+            }
+        }
+    }
+
+    public CarEntity getSelectedCar() {
+        if (selectedCarId <= 0) {
+            return null;
+        }
+        for (CarEntity entity : data) {
+            if (entity.getId() == selectedCarId) {
+                return entity;
+            }
+        }
+        return null;
     }
 
     public void submitList(List<CarEntity> cars) {
         data.clear();
         if (cars != null) {
             data.addAll(cars);
+        }
+        if (selectionHighlightEnabled && getSelectedCar() == null) {
+            selectedCarId = -1L;
         }
         notifyDataSetChanged();
     }
@@ -75,8 +108,21 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
             String price = itemView.getContext().getString(R.string.car_price_template, entity.getDailyPrice());
             priceView.setText(price);
 
+            if (selectionHighlightEnabled && itemView instanceof CardView) {
+                boolean isSelected = entity.getId() == selectedCarId;
+                CardView cardView = (CardView) itemView;
+                int backgroundColor = isSelected
+                        ? ContextCompat.getColor(itemView.getContext(), R.color.teal_200)
+                        : ContextCompat.getColor(itemView.getContext(), android.R.color.white);
+                cardView.setCardBackgroundColor(backgroundColor);
+                cardView.setCardElevation(isSelected ? 8f : 2f);
+            }
+
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
+                    if (selectionHighlightEnabled) {
+                        setSelectedCarId(entity.getId());
+                    }
                     listener.onItemClick(entity);
                 }
             });

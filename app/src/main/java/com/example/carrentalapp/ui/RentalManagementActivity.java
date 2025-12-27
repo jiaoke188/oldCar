@@ -3,6 +3,8 @@ package com.example.carrentalapp.ui;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.content.Intent;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +30,9 @@ import java.util.List;
 
 public class RentalManagementActivity extends AppCompatActivity implements OrderAdapter.OnItemActionListener {
 
+    public static final String EXTRA_INITIAL_KEYWORD = "initialKeyword";
+    public static final String EXTRA_HIGHLIGHT_ORDER_ID = "highlightOrderId";
+
     private static final String[] STATUS_OPTIONS = new String[] { "已预定", "进行中", "已完成", "已取消" };
 
     private DataRepository repository;
@@ -35,6 +40,9 @@ public class RentalManagementActivity extends AppCompatActivity implements Order
     private OrderAdapter adapter;
     private EditText searchInput;
     private View emptyView;
+    private RecyclerView recyclerView;
+    private long highlightOrderId;
+    private boolean highlightHandled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +60,21 @@ public class RentalManagementActivity extends AppCompatActivity implements Order
         searchInput = findViewById(R.id.inputSearch);
         Button searchButton = findViewById(R.id.buttonSearch);
         Button exportButton = findViewById(R.id.buttonExport);
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerView);
         emptyView = findViewById(R.id.emptyView);
 
         adapter = new OrderAdapter();
         adapter.setListener(this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+
+        Intent intent = getIntent();
+        String initialKeyword = intent.getStringExtra(EXTRA_INITIAL_KEYWORD);
+        highlightOrderId = intent.getLongExtra(EXTRA_HIGHLIGHT_ORDER_ID, 0L);
+        highlightHandled = highlightOrderId <= 0;
+        if (!TextUtils.isEmpty(initialKeyword)) {
+            searchInput.setText(initialKeyword);
+        }
 
         searchButton.setOnClickListener(v -> loadOrders(searchInput.getText().toString().trim()));
         exportButton.setOnClickListener(v -> exportOrders());
@@ -70,11 +86,31 @@ public class RentalManagementActivity extends AppCompatActivity implements Order
         loadOrders(searchInput.getText().toString().trim());
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        String initialKeyword = intent.getStringExtra(EXTRA_INITIAL_KEYWORD);
+        highlightOrderId = intent.getLongExtra(EXTRA_HIGHLIGHT_ORDER_ID, 0L);
+        highlightHandled = highlightOrderId <= 0;
+        if (!TextUtils.isEmpty(initialKeyword)) {
+            searchInput.setText(initialKeyword);
+        }
+    }
+
     private void loadOrders(String keyword) {
         repository.searchOrders(keyword, new RepositoryCallback<List<OrderWithDetail>>() {
             @Override
             public void onComplete(List<OrderWithDetail> result) {
                 adapter.submitList(result);
+                if (highlightOrderId > 0 && !highlightHandled) {
+                    int position = adapter.getPositionById(highlightOrderId);
+                    if (position >= 0) {
+                        adapter.setHighlightedOrderId(highlightOrderId);
+                        recyclerView.scrollToPosition(position);
+                        highlightHandled = true;
+                    }
+                }
                 emptyView.setVisibility(result == null || result.isEmpty() ? View.VISIBLE : View.GONE);
             }
         });

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CarRentalApp</string>
+    <string name="app_name">手机租车App</string>
     <string name="home_welcome_message">欢迎 %1$s（账号：%2$s，角色：%3$s）</string>
     <string name="car_meta_template">品牌：%1$s | 分类：%2$s | 库存：%3$d</string>
     <string name="car_price_template">日租价：%1$.2f 元</string>
