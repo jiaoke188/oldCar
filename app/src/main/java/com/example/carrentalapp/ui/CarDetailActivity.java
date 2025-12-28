@@ -92,6 +92,20 @@ public class CarDetailActivity extends AppCompatActivity {
         loadData();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // 每次返回详情页时，刷新车辆库存信息
+        if (carId > 0) {
+            repository.loadCarById(carId, result -> {
+                if (result != null) {
+                    currentCar = result;
+                    bindCar(result);
+                }
+            });
+        }
+    }
+
     private void loadData() {
         setLoading(true);
         repository.loadCarById(carId, new RepositoryCallback<CarEntity>() {
@@ -121,7 +135,8 @@ public class CarDetailActivity extends AppCompatActivity {
 
     private void bindCar(CarEntity car) {
         nameView.setText(car.getName());
-        String meta = getString(R.string.car_detail_meta_template, FormatUtils.safe(car.getBrand()), FormatUtils.safe(car.getCategory()), car.getDailyPrice(), car.getInventory());
+        String meta = getString(R.string.car_detail_meta_template, FormatUtils.safe(car.getBrand()),
+                FormatUtils.safe(car.getCategory()), car.getDailyPrice(), car.getInventory());
         metaView.setText(meta);
         statusView.setText(car.getStatus());
         descriptionView.setText(FormatUtils.safe(car.getDescription()));
@@ -141,14 +156,16 @@ public class CarDetailActivity extends AppCompatActivity {
             Toast.makeText(this, "请先登录", Toast.LENGTH_SHORT).show();
             return;
         }
-        repository.toggleFavorite(sessionManager.getUserId(), carId, sessionManager.getUsername(), new RepositoryCallback<Boolean>() {
-            @Override
-            public void onComplete(Boolean result) {
-                isFavorite = Boolean.TRUE.equals(result);
-                refreshFavoriteButton();
-                Toast.makeText(CarDetailActivity.this, isFavorite ? "已加入收藏" : "已取消收藏", Toast.LENGTH_SHORT).show();
-            }
-        });
+        repository.toggleFavorite(sessionManager.getUserId(), carId, sessionManager.getUsername(),
+                new RepositoryCallback<Boolean>() {
+                    @Override
+                    public void onComplete(Boolean result) {
+                        isFavorite = Boolean.TRUE.equals(result);
+                        refreshFavoriteButton();
+                        Toast.makeText(CarDetailActivity.this, isFavorite ? "已加入收藏" : "已取消收藏", Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                });
     }
 
     private void refreshFavoriteButton() {
@@ -165,14 +182,15 @@ public class CarDetailActivity extends AppCompatActivity {
             Toast.makeText(this, "请输入评论内容", Toast.LENGTH_SHORT).show();
             return;
         }
-        repository.addComment(carId, sessionManager.getUserId(), content, sessionManager.getUsername(), new RepositoryCallback<Long>() {
-            @Override
-            public void onComplete(Long result) {
-                commentInput.setText("");
-                loadComments();
-                Toast.makeText(CarDetailActivity.this, "评论成功", Toast.LENGTH_SHORT).show();
-            }
-        });
+        repository.addComment(carId, sessionManager.getUserId(), content, sessionManager.getUsername(),
+                new RepositoryCallback<Long>() {
+                    @Override
+                    public void onComplete(Long result) {
+                        commentInput.setText("");
+                        loadComments();
+                        Toast.makeText(CarDetailActivity.this, "评论成功", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void openOrderEditor() {

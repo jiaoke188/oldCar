@@ -5,4 +5,7 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="purple_500">#FF6200EE</color>
+    <color name="button_primary">#FF6200EE</color>
+    <color name="button_danger">#FFFF6B6B</color>
+    <color name="button_success">#FF4CAF50</color>
 </resources>

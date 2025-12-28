@@ -17,7 +17,9 @@
 
             <TextView android:id="@+id/textStatus" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="状态" android:paddingStart="12dp" android:paddingEnd="12dp" android:paddingTop="8dp" android:paddingBottom="8dp" android:textStyle="bold" android:gravity="center_vertical" />
 
-            <Button android:id="@+id/buttonPayment" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="支付" android:visibility="gone" android:layout_marginStart="12dp" android:paddingStart="12dp" android:paddingEnd="12dp" />
+            <Button android:id="@+id/buttonPayment" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="支付" android:visibility="gone" android:layout_marginStart="12dp" android:paddingStart="12dp" android:paddingEnd="12dp" android:background="@drawable/btn_danger" android:textColor="@android:color/white" />
+
+            <Button android:id="@+id/buttonEarlyReturn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="提前还车" android:visibility="gone" android:layout_marginStart="12dp" android:paddingStart="12dp" android:paddingEnd="12dp" android:background="@drawable/btn_primary" android:textColor="@android:color/white" />
 
             <Button android:id="@+id/buttonDelete" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="删除" android:layout_marginStart="12dp" />
         </LinearLayout>

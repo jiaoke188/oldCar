@@ -22,9 +22,11 @@
 
             <EditText android:id="@+id/inputNotes" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:hint="备注" android:minLines="3" android:gravity="start|top" android:background="@drawable/bg_input" android:padding="12dp" />
 
-            <Button android:id="@+id/buttonSave" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:text="保存" />
+            <Button android:id="@+id/buttonSave" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:text="保存" android:background="@drawable/btn_default" android:textColor="@android:color/white" />
 
-            <Button android:id="@+id/buttonPayment" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="支付" android:visibility="gone" android:background="#FF6B6B" android:textColor="@android:color/white" />
+            <Button android:id="@+id/buttonPayment" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="支付" android:visibility="gone" android:background="@drawable/btn_danger" android:textColor="@android:color/white" />
+
+            <Button android:id="@+id/buttonEarlyReturn" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="提前还车" android:visibility="gone" android:background="@drawable/btn_primary" android:textColor="@android:color/white" />
 
             <ProgressBar android:id="@+id/progressBar" style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Small" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:layout_marginTop="16dp" android:visibility="gone" />
         </LinearLayout>

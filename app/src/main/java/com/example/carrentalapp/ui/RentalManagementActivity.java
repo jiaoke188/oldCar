@@ -179,6 +179,50 @@ public class RentalManagementActivity extends AppCompatActivity implements Order
     }
 
     @Override
+    public void onEarlyReturn(OrderWithDetail order) {
+        // 显示确认对话框
+        new AlertDialog.Builder(this)
+                .setTitle("提前还车确认")
+                .setMessage("确认提前还车吗？车辆库存将自动增加 1。")
+                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 更新订单状态为已完成
+                        repository.updateOrderStatus(order.getId(), "已完成", sessionManager.getUsername(),
+                                new RepositoryCallback<Boolean>() {
+                                    @Override
+                                    public void onComplete(Boolean result) {
+                                        if (result) {
+                                            // 增加车辆库存
+                                            repository.increaseCarInventory(order.getCarId(),
+                                                    sessionManager.getUsername(),
+                                                    new RepositoryCallback<Boolean>() {
+                                                        @Override
+                                                        public void onComplete(Boolean inventoryResult) {
+                                                            if (inventoryResult) {
+                                                                Toast.makeText(RentalManagementActivity.this,
+                                                                        "提前还车成功，库存已更新",
+                                                                        Toast.LENGTH_SHORT).show();
+                                                                loadOrders(searchInput.getText().toString().trim());
+                                                            } else {
+                                                                Toast.makeText(RentalManagementActivity.this,
+                                                                        "库存更新失败", Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        }
+                                                    });
+                                        } else {
+                                            Toast.makeText(RentalManagementActivity.this,
+                                                    "订单状态更新失败", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                    }
+                })
+                .setNegativeButton("取消", null)
+                .show();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();

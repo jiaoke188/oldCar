@@ -312,11 +312,30 @@ public class PaymentActivity extends AppCompatActivity {
         // 模拟支付成功，实际应调用支付API
         repository.updateOrderStatus(orderId, "进行中", "system", result -> {
             if (result != null && result) {
-                Toast.makeText(PaymentActivity.this, "支付成功！订单已开始", Toast.LENGTH_SHORT).show();
-                // 返回到RentalManagementActivity
-                clearPaymentSession();
-                setResult(RESULT_OK);
-                finish();
+                // 支付成功后，需要获取订单信息来获取车辆ID，然后减少库存
+                repository.loadOrderById(orderId, order -> {
+                    if (order != null && order.getCarId() > 0) {
+                        // 减少车辆库存
+                        repository.decreaseCarInventory(order.getCarId(), sessionManager.getUsername(),
+                                inventoryResult -> {
+                                    if (inventoryResult != null && inventoryResult) {
+                                        Toast.makeText(PaymentActivity.this, "支付成功！订单已开始，库存已更新",
+                                                Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(PaymentActivity.this, "库存更新失败，请联系管理员",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                    clearPaymentSession();
+                                    setResult(RESULT_OK);
+                                    finish();
+                                });
+                    } else {
+                        Toast.makeText(PaymentActivity.this, "支付成功！订单已开始", Toast.LENGTH_SHORT).show();
+                        clearPaymentSession();
+                        setResult(RESULT_OK);
+                        finish();
+                    }
+                });
             } else {
                 Toast.makeText(PaymentActivity.this, "支付失败，请重试", Toast.LENGTH_SHORT).show();
             }

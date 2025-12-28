@@ -12,11 +12,11 @@
 
             <Button android:id="@+id/buttonUserManage" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="系统用户管理" android:layout_marginBottom="12dp" />
 
-            <Button android:id="@+id/buttonCarManage" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="车辆信息管理" android:layout_marginBottom="12dp" />
+            <Button android:id="@+id/buttonCarManage" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="出租车辆" android:layout_marginBottom="12dp" />
 
-            <Button android:id="@+id/buttonRentalManage" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="租赁信息查询" android:layout_marginBottom="12dp" />
+            <Button android:id="@+id/buttonRentalManage" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="订单查询" android:layout_marginBottom="12dp" />
 
-            <Button android:id="@+id/buttonMarket" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="商品信息与商品选购" android:layout_marginBottom="12dp" />
+            <Button android:id="@+id/buttonMarket" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="租赁车辆" android:layout_marginBottom="12dp" />
 
             <Button android:id="@+id/buttonFavorite" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="收藏夹" />
 

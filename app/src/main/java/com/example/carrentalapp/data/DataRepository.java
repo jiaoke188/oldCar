@@ -187,19 +187,36 @@ public class DataRepository {
         });
     }
 
+    public void increaseCarInventory(long carId, String operator, RepositoryCallback<Boolean> callback) {
+        AppDatabase.getDatabaseExecutor().execute(() -> {
+            CarDao carDao = database.carDao();
+            CarEntity car = carDao.findById(carId);
+            if (car == null) {
+                dispatch(callback, Boolean.FALSE);
+                return;
+            }
+            car.setInventory(car.getInventory() + 1);
+            carDao.update(car);
+            logAsync("车辆管理", String.format(Locale.CHINA, "%s 提前还车，车辆 %s 库存增加 1", operator, car.getName()), operator);
+            dispatch(callback, Boolean.TRUE);
+        });
+    }
+
     public void loadCarById(long carId, RepositoryCallback<CarEntity> callback) {
         AppDatabase.getDatabaseExecutor().execute(() -> dispatch(callback, database.carDao().findById(carId)));
     }
 
     public void loadOrderById(long orderId, RepositoryCallback<RentalOrderEntity> callback) {
-        AppDatabase.getDatabaseExecutor().execute(() -> dispatch(callback, database.rentalOrderDao().findById(orderId)));
+        AppDatabase.getDatabaseExecutor()
+                .execute(() -> dispatch(callback, database.rentalOrderDao().findById(orderId)));
     }
 
     public void loadCommentsByCar(long carId, RepositoryCallback<List<CarCommentWithUser>> callback) {
         AppDatabase.getDatabaseExecutor().execute(() -> dispatch(callback, database.carCommentDao().loadByCar(carId)));
     }
 
-    public void addComment(long carId, long userId, String content, String operator, RepositoryCallback<Long> callback) {
+    public void addComment(long carId, long userId, String content, String operator,
+            RepositoryCallback<Long> callback) {
         AppDatabase.getDatabaseExecutor().execute(() -> {
             CarCommentEntity entity = new CarCommentEntity();
             entity.setCarId(carId);
@@ -244,7 +261,8 @@ public class DataRepository {
     }
 
     public void loadOrders(RepositoryCallback<List<OrderWithDetail>> callback) {
-        AppDatabase.getDatabaseExecutor().execute(() -> dispatch(callback, database.rentalOrderDao().loadAllWithDetail()));
+        AppDatabase.getDatabaseExecutor()
+                .execute(() -> dispatch(callback, database.rentalOrderDao().loadAllWithDetail()));
     }
 
     public void searchOrders(String keyword, RepositoryCallback<List<OrderWithDetail>> callback) {
@@ -380,6 +398,7 @@ public class DataRepository {
 
     @NonNull
     private String generateOrderCode() {
-        return String.format(Locale.CHINA, "ORD-%s", UUID.randomUUID().toString().substring(0, 8).toUpperCase(Locale.CHINA));
+        return String.format(Locale.CHINA, "ORD-%s",
+                UUID.randomUUID().toString().substring(0, 8).toUpperCase(Locale.CHINA));
     }
 }

@@ -168,8 +168,9 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // 每次返回首页时，自动更新还车提醒
+        // 每次返回首页时，自动更新还车提醒和车辆列表
         loadAndDisplayRentalInfo();
+        loadAllCars();
     }
 
     @Override

@@ -61,6 +61,7 @@ public class OrderEditActivity extends AppCompatActivity {
     private long endTimestamp;
 
     private Button paymentButton; // 支付按钮
+    private Button earlyReturnButton; // 提前还车按钮
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,6 +87,7 @@ public class OrderEditActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         saveButton = findViewById(R.id.buttonSave);
         paymentButton = findViewById(R.id.buttonPayment);
+        earlyReturnButton = findViewById(R.id.buttonEarlyReturn);
 
         ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
                 STATUS_OPTIONS);
@@ -103,6 +105,11 @@ public class OrderEditActivity extends AppCompatActivity {
         // 支付按钮点击事件
         if (paymentButton != null) {
             paymentButton.setOnClickListener(v -> processPayment());
+        }
+
+        // 提前还车按钮点击事件
+        if (earlyReturnButton != null) {
+            earlyReturnButton.setOnClickListener(v -> processEarlyReturn());
         }
 
         carSpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
@@ -226,6 +233,11 @@ public class OrderEditActivity extends AppCompatActivity {
                 if (paymentButton != null) {
                     paymentButton.setVisibility("已预定".equals(result.getStatus()) ? View.VISIBLE : View.GONE);
                 }
+
+                // 根据订单状态显示或隐藏提前还车按钮（仅当状态为"进行中"时）
+                if (earlyReturnButton != null) {
+                    earlyReturnButton.setVisibility("进行中".equals(result.getStatus()) ? View.VISIBLE : View.GONE);
+                }
             }
         });
     }
@@ -342,6 +354,9 @@ public class OrderEditActivity extends AppCompatActivity {
                 setLoading(false);
                 if (result != null && result > 0) {
                     Toast.makeText(OrderEditActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(OrderEditActivity.this, RentalManagementActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent);
                     finish();
                 } else {
                     Toast.makeText(OrderEditActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
@@ -412,5 +427,70 @@ public class OrderEditActivity extends AppCompatActivity {
         intent.putExtra("totalAmount", currentOrder.getTotalAmount());
         intent.putExtra("returnDate", FormatUtils.formatDate(currentOrder.getEndDate()));
         startActivity(intent);
+    }
+
+    private void processEarlyReturn() {
+        if (currentOrder == null || orderId <= 0) {
+            Toast.makeText(this, "订单不存在", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!"进行中".equals(currentOrder.getStatus())) {
+            Toast.makeText(this, "只有进行中的订单才能提前还车", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // 显示确认对话框
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("提前还车确认")
+                .setMessage("确认提前还车吗？车辆库存将自动增加 1。")
+                .setPositiveButton("确认", (dialog, which) -> {
+                    setLoading(true);
+                    long actualReturnTime = System.currentTimeMillis();
+                    currentOrder.setActualReturnDate(actualReturnTime);
+                    currentOrder.setStatus("已完成");
+
+                    // 更新订单状态为已完成
+                    repository.updateOrderStatus(orderId, "已完成", sessionManager.getUsername(),
+                            new RepositoryCallback<Boolean>() {
+                                @Override
+                                public void onComplete(Boolean result) {
+                                    if (result) {
+                                        // 增加车辆库存
+                                        repository.increaseCarInventory(currentOrder.getCarId(),
+                                                sessionManager.getUsername(),
+                                                new RepositoryCallback<Boolean>() {
+                                                    @Override
+                                                    public void onComplete(Boolean inventoryResult) {
+                                                        setLoading(false);
+                                                        if (inventoryResult) {
+                                                            // 也需要更新订单的 actualReturnDate
+                                                            repository.saveOrder(currentOrder,
+                                                                    sessionManager.getUsername(),
+                                                                    new RepositoryCallback<Long>() {
+                                                                        @Override
+                                                                        public void onComplete(Long saveResult) {
+                                                                            Toast.makeText(OrderEditActivity.this,
+                                                                                    "提前还车成功，库存已更新",
+                                                                                    Toast.LENGTH_SHORT).show();
+                                                                            finish();
+                                                                        }
+                                                                    });
+                                                        } else {
+                                                            Toast.makeText(OrderEditActivity.this,
+                                                                    "库存更新失败", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+                                                });
+                                    } else {
+                                        setLoading(false);
+                                        Toast.makeText(OrderEditActivity.this, "订单状态更新失败",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                })
+                .setNegativeButton("取消", null)
+                .show();
     }
 }

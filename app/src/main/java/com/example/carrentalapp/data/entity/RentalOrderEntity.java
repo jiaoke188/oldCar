@@ -6,26 +6,14 @@ import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "rental_orders",
-    indices = {
-        @Index(value = {"order_code"}, unique = true),
-        @Index(value = {"car_id"}, unique = false),
-        @Index(value = {"user_id"}, unique = false)
-    },
-        foreignKeys = {
-                @ForeignKey(
-                        entity = CarEntity.class,
-                        parentColumns = "id",
-                        childColumns = "car_id",
-                        onDelete = ForeignKey.CASCADE
-                ),
-                @ForeignKey(
-                        entity = UserEntity.class,
-                        parentColumns = "id",
-                        childColumns = "user_id",
-                        onDelete = ForeignKey.CASCADE
-                )
-        })
+@Entity(tableName = "rental_orders", indices = {
+        @Index(value = { "order_code" }, unique = true),
+        @Index(value = { "car_id" }, unique = false),
+        @Index(value = { "user_id" }, unique = false)
+}, foreignKeys = {
+        @ForeignKey(entity = CarEntity.class, parentColumns = "id", childColumns = "car_id", onDelete = ForeignKey.CASCADE),
+        @ForeignKey(entity = UserEntity.class, parentColumns = "id", childColumns = "user_id", onDelete = ForeignKey.CASCADE)
+})
 public class RentalOrderEntity {
 
     @PrimaryKey(autoGenerate = true)
@@ -60,6 +48,9 @@ public class RentalOrderEntity {
 
     @ColumnInfo(name = "created_at")
     private long createdAt;
+
+    @ColumnInfo(name = "actual_return_date")
+    private long actualReturnDate;
 
     public long getId() {
         return id;
@@ -147,5 +138,13 @@ public class RentalOrderEntity {
 
     public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public long getActualReturnDate() {
+        return actualReturnDate;
+    }
+
+    public void setActualReturnDate(long actualReturnDate) {
+        this.actualReturnDate = actualReturnDate;
     }
 }

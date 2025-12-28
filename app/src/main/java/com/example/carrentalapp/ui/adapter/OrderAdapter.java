@@ -27,6 +27,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         void onDelete(OrderWithDetail order);
 
         void onPayment(OrderWithDetail order);
+
+        void onEarlyReturn(OrderWithDetail order);
     }
 
     private final List<OrderWithDetail> data = new ArrayList<>();
@@ -86,6 +88,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         private final TextView remainingDaysView;
         private final TextView statusView;
         private final Button paymentButton;
+        private final Button earlyReturnButton;
         private final Button deleteButton;
 
         OrderViewHolder(@NonNull View itemView) {
@@ -96,6 +99,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             remainingDaysView = itemView.findViewById(R.id.textRemainingDays);
             statusView = itemView.findViewById(R.id.textStatus);
             paymentButton = itemView.findViewById(R.id.buttonPayment);
+            earlyReturnButton = itemView.findViewById(R.id.buttonEarlyReturn);
             deleteButton = itemView.findViewById(R.id.buttonDelete);
         }
 
@@ -128,6 +132,18 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
                 });
             } else {
                 paymentButton.setVisibility(View.GONE);
+            }
+
+            // 显示提前还车按钮（仅当状态为"进行中"时）
+            if ("进行中".equals(order.getStatus())) {
+                earlyReturnButton.setVisibility(View.VISIBLE);
+                earlyReturnButton.setOnClickListener(v -> {
+                    if (listener != null) {
+                        listener.onEarlyReturn(order);
+                    }
+                });
+            } else {
+                earlyReturnButton.setVisibility(View.GONE);
             }
 
             // 显示还车倒计时（仅当状态为"进行中"时）
